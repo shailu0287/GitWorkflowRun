@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ApplicationSettings.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ApplicationName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">My Application Setting</Value>
+    </Setting>
+    <Setting Name="SettingFrom" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SettingFile</Value>
+    </Setting>
+    <Setting Name="TestSetting" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Setting from setting file</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
