@@ -40,7 +40,7 @@ jobs:
       
     - name: Build the application
       run: |
-            msbuild.exe $env:Solution_Name /p:DeployOnBuild=true /p:OutputPath="../_build" /p:DeleteExistingFiles=True /p:platform="Any CPU" /p:configuration="Release" 
+            msbuild.exe $env:Solution_Name /p:DeployOnBuild=true /p:OutputPath="../_build" /p:DeleteExistingFiles=True /p:platform="Any CPU" /p:configuration="Release" /p:ApplicationVersion="1.2.3.4" /p:MinimumRequiredVersion="1.2.3.4" /p:PublishVersion="1.2.3.4" 
             
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
