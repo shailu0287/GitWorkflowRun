@@ -15,7 +15,7 @@ jobs:
 
     runs-on: self-hosted 
     env:
-      Solution_Name: GitWorkflowRun/ApplicationSettings.sln                       # Replace with your solution name, i.e. MyWpfApp.sln.
+      Solution_Name: ApplicationSettings.sln                       # Replace with your solution name, i.e. MyWpfApp.sln.
       Test_Project_Path:  GitWorkflowRun/ApplicationSettings/ApplicationSettings.csproj            
       Wap_Project_Directory: GitWorkflowRun/ApplicationSettings/
       Wap_Project_Path: GitWorkflowRun/ApplicationSettings/Artifacts/                  
