@@ -39,6 +39,7 @@ jobs:
             
   continuous-deployment:
     runs-on: windows-latest
+    needs: [build]
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
