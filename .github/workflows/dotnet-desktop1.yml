@@ -1,5 +1,5 @@
 
-name: .NET Desktop 
+name: .NET Desktop
 
 on:
   push:
