@@ -11,7 +11,7 @@ jobs:
 
   build:
 
-    runs-on: windows
+    runs-on: windows-latest
     env:
       Solution_Name: ApplicationSettings.sln                       # Replace with your solution name, i.e. MyWpfApp.sln.
       Test_Project_Path:  GitWorkflowRun/ApplicationSettings/ApplicationSettings.csproj            
@@ -38,7 +38,7 @@ jobs:
             msbuild.exe $env:Solution_Name /p:DeployOnBuild=true /p:OutputPath="../_build" /p:DeleteExistingFiles=True /p:platform="Any CPU" /p:configuration="Release" /p:ApplicationVersion="1.2.3.4" /p:MinimumRequiredVersion="1.2.3.4" /p:PublishVersion="1.2.3.4" 
             
   continuous-deployment:
-    runs-on: windows
+    runs-on: windows-latest
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
