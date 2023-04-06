@@ -51,9 +51,9 @@ jobs:
         id: deploy
         run: |
           aws deploy create-deployment \
-            --application-name "GitHubActionCodeDeploy" \
-            --deployment-group-name "GitHubActionCodeDeployGroup" \
-            --deployment-config-name "CodeDeployDefault.OneAtATime" \
-            --github-location repository="shailu0287/GitWorkflowRun",commitId="8a7f00f965eb25e1fd38bdf8354182ce3fb04d0e"
+            --application-name GitHubActionCodeDeploy \
+            --deployment-group-name GitHubActionCodeDeployGroup \
+            --deployment-config-name CodeDeployDefault.OneAtATime \
+            --github-location repository=shailu0287/GitWorkflowRun,commitId=8a7f00f965eb25e1fd38bdf8354182ce3fb04d0e
      
 
