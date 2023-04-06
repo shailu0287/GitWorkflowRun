@@ -11,9 +11,7 @@ jobs:
 
   build:
 
-
-
-    runs-on: self-hosted 
+    runs-on: windows
     env:
       Solution_Name: ApplicationSettings.sln                       # Replace with your solution name, i.e. MyWpfApp.sln.
       Test_Project_Path:  GitWorkflowRun/ApplicationSettings/ApplicationSettings.csproj            
@@ -29,9 +27,6 @@ jobs:
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.2
     
- 
-  
-    
     - name: Create Build Directory
       run: mkdir _build
   
@@ -42,10 +37,23 @@ jobs:
       run: |
             msbuild.exe $env:Solution_Name /p:DeployOnBuild=true /p:OutputPath="../_build" /p:DeleteExistingFiles=True /p:platform="Any CPU" /p:configuration="Release" /p:ApplicationVersion="1.2.3.4" /p:MinimumRequiredVersion="1.2.3.4" /p:PublishVersion="1.2.3.4" 
             
-    - name: Upload artifact
-      uses: actions/upload-artifact@v1.0.0
-      with:
-        name: WindowFormDevOpsBundle
-        path: "./_build" 
+  continuous-deployment:
+    runs-on: windows
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: AKIA2FPDD2Y7NSXBGU3L
+          aws-secret-access-key: 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
+          aws-region: eu-north-1
+
+      - name: Create CodeDeploy Deployment
+        id: deploy
+        run: |
+          aws deploy create-deployment \
+            --application-name "GitHubActionCodeDeploy" \
+            --deployment-group-name "GitHubActionCodeDeployGroup" \
+            --deployment-config-name "CodeDeployDefault.OneAtATime" \
+            --github-location repository="shailu0287/GitWorkflowRun",commitId="8a7f00f965eb25e1fd38bdf8354182ce3fb04d0e"
      
 
