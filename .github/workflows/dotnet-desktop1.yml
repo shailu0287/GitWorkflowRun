@@ -39,7 +39,7 @@ jobs:
     - uses: vimtor/action-zip@v1
       with:
            files: _build
-           dest: result.zip
+           dest: GitWorkflowRun/result.zip
     - uses: shallwefootball/s3-upload-action@master
       name: Upload to S3
       id: S3
