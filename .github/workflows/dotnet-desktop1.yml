@@ -68,6 +68,6 @@ jobs:
       - name: Create CodeDeploy Deployment
         id: deploy
         run: |
-          aws deploy create-deployment --application-name CodeDeploy1 --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name dg2 --s3-location bucket=shailencodedeploy,bundleType=zip,key=${{key}}
+          aws deploy create-deployment --application-name CodeDeploy1 --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name dg2 --s3-location bucket=shailencodedeploy,bundleType=zip,key=$key
      
 
