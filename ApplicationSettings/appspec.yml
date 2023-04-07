@@ -1,5 +1,5 @@
 version: 0.0
 os: windows
 files:
- - source: .\deployment-archive
+ - source: .\
    destination: C:\Users\Administrator\VCS
