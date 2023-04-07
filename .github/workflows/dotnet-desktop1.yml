@@ -18,9 +18,7 @@ jobs:
       Wap_Project_Directory: GitWorkflowRun/ApplicationSettings/
       Wap_Project_Path: GitWorkflowRun/ApplicationSettings/Artifacts/ 
 
-    outputs:
-      # Map the step outputs to job outputs
-      my_var: ${{steps.OutputStep.outputs.my_var}}
+    
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -52,10 +50,9 @@ jobs:
           aws_bucket: shailencodedeploy
           source_dir: 'GitWorkflowRun/'
           
-    - name: OutputStep
-      run: |
-            my_var: 4TD76lxqG/result.zip
-            echo "Output [$my_var]"
+    outputs:
+      # Map the step outputs to job outputs
+      my_var: 4TD76lxqG/result.zip
 
                   
   continuous-deployment:
