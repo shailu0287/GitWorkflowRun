@@ -54,7 +54,7 @@ jobs:
           
     - name: Outputs
       run: |
-            my_var=${{steps.s3.outputs.uploaded}}
+            my_var=${{steps.S3.outputs.uploaded}}
             echo "Output [$my_var]"
             echo "my_var=$my_var" >> $GITHUB_OUTPUT 
 
