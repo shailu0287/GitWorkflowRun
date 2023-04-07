@@ -49,6 +49,9 @@ jobs:
           aws_secret_access_key: BrMksZryr70RfXhn+w9pfa02VIMU1SBDEUK61tIK
           aws_bucket: shailencodedeploy
           source_dir: 'GitWorkflowRun/'
+    - name: SetOuput
+        $my_var = ${{ steps.S3.outputs.uploaded }}
+          
           
     outputs:
       # Map the step outputs to job outputs
