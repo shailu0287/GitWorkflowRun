@@ -51,7 +51,7 @@ jobs:
           source_dir: 'GitWorkflowRun/'
     - name: SetOuput
       run: |
-          $my_var = ${{ steps.S3.outputs.uploaded }}
+          echo ${{ steps.S3.outputs.uploaded }} >> $GITHUB_OUTPUT  
           
           
     outputs:
