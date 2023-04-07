@@ -52,7 +52,7 @@ jobs:
           
     outputs:
       # Map the step outputs to job outputs
-      my_var: 4TD76lxqG/result.zip
+      my_var: ${{steps.S3.outputs.uploaded}}
 
                   
   continuous-deployment:
