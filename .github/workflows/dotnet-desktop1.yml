@@ -20,7 +20,7 @@ jobs:
 
     outputs:
       # Map the step outputs to job outputs
-      my_var: ${{steps.S3.outputs.uploaded}}
+      my_var: ${{steps.S3.outputs.my_var}}
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -54,7 +54,7 @@ jobs:
           
     - name: Outputs
       run: |
-            my_var=${{steps.S3.outputs.uploaded}}
+            my_var="4TD76lxqG/result.zip"
             echo "Output [$my_var]"
             echo "my_var=$my_var" >> $GITHUB_OUTPUT 
 
