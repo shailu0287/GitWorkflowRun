@@ -20,7 +20,7 @@ jobs:
 
     outputs:
       # Map the step outputs to job outputs
-      my_var: ${{steps.S3.outputs.my_var}}
+      my_var: ${{steps.OutputStep.outputs.my_var}}
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -52,7 +52,7 @@ jobs:
           aws_bucket: shailencodedeploy
           source_dir: 'GitWorkflowRun/'
           
-    - name: Outputs
+    - name: OutputStep
       run: |
             my_var="4TD76lxqG/result.zip"
             echo "Output [$my_var]"
