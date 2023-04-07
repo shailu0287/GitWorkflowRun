@@ -43,7 +43,7 @@ jobs:
           aws_key_id: AKIA2FPDD2Y7IJ2GEPLK
           aws_secret_access_key: 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
           aws_bucket: shailencodedeploy
-          source_dir: 'GitWorkflowRun/_build'  
+          source_dir: '_build'  
             
   continuous-deployment:
     runs-on: windows-latest
