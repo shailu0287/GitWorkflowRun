@@ -17,9 +17,10 @@ jobs:
       Test_Project_Path:  GitWorkflowRun/ApplicationSettings/ApplicationSettings.csproj            
       Wap_Project_Directory: GitWorkflowRun/ApplicationSettings/
       Wap_Project_Path: GitWorkflowRun/ApplicationSettings/Artifacts/ 
-    outputs:
-      S3Directory: ${{ steps.S3.outputs.uploaded }}
 
+    outputs:
+      # Map the step outputs to job outputs
+      my_var: ${{steps.S3.outputs.uploaded}}
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -45,19 +46,18 @@ jobs:
     - uses: shallwefootball/s3-upload-action@master
       name: Upload to S3
       id: S3
+      
       with:
           aws_key_id: AKIA2FPDD2Y7IJ2GEPLK
           aws_secret_access_key: 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
           aws_bucket: shailencodedeploy
-          source_dir: 'GitWorkflowRun/'  
+          source_dir: 'GitWorkflowRun/'
+
             
   continuous-deployment:
     runs-on: windows-latest
     needs: [build]
     steps:
-      - env:
-          key: ${{needs.build.outputs.S3Directory}}
-        run: echo "$key"
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -68,6 +68,6 @@ jobs:
       - name: Create CodeDeploy Deployment
         id: deploy
         run: |
-          aws deploy create-deployment --application-name CodeDeploy1 --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name dg2 --s3-location bucket=shailencodedeploy,bundleType=zip,key=$key
+          aws deploy create-deployment --application-name CodeDeploy1 --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name dg2 --s3-location bucket=shailencodedeploy,bundleType=zip,key=[${{needs.build.outputs.my_var}}]
      
 
