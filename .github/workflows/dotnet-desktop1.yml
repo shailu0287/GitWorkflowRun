@@ -57,7 +57,7 @@ jobs:
     steps:
       - env:
           key: ${{needs.build.outputs.S3Directory}}
-        run: echo ${{key}}
+        run: echo "$key"
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
