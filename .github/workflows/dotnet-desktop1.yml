@@ -50,7 +50,8 @@ jobs:
           aws_bucket: shailencodedeploy
           source_dir: 'GitWorkflowRun/'
     - name: SetOuput
-        $my_var = ${{ steps.S3.outputs.uploaded }}
+      run: |
+          $my_var = ${{ steps.S3.outputs.uploaded }}
           
           
     outputs:
