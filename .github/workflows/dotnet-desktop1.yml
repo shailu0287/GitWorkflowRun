@@ -54,13 +54,10 @@ jobs:
           
     - name: OutputStep
       run: |
-            my_var="4TD76lxqG/result.zip"
+            my_var: 4TD76lxqG/result.zip
             echo "Output [$my_var]"
-            echo "my_var=$my_var" >> $GITHUB_OUTPUT 
 
-      
-
-            
+                  
   continuous-deployment:
     runs-on: windows-latest
     needs: [build]
