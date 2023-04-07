@@ -1,10 +1,5 @@
 version: 0.0
 os: windows
 files:
- - source: .\_build
+ - source: .\deployment-archive
    destination: C:\Users\Administrator\VCS
-hooks:
-  AfterInstall:
-   - location: scripts/install_app_dependencies
-     timeout: 300
-     runas: root
