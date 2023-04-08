@@ -51,12 +51,12 @@ jobs:
           source_dir: 'GitWorkflowRun/'
     - name: SetOuput
       run: |
-          echo ${{ steps.S3.outputs.uploaded }} >> $GITHUB_OUTPUT  
+          echo ${{ steps.S3.outputs.object_key }} >> $GITHUB_OUTPUT  
           
           
     outputs:
       # Map the step outputs to job outputs
-      my_var: ${{steps.S3.outputs.uploaded}}
+      my_var: ${{steps.S3.outputs.object_key}}
 
                   
   continuous-deployment:
