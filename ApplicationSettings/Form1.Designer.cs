@@ -45,7 +45,7 @@ namespace ApplicationSettings
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(84, 20);
             this.label1.TabIndex = 0;
-            this.label1.Text = "App Name change";
+            this.label1.Text = "App Name";
             // 
             // label2
             // 
