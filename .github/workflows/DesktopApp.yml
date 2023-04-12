@@ -1,0 +1,78 @@
+
+name: .NET Desktop
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+
+    runs-on: windows-latest
+    env:
+      Solution_Name: ApplicationSettings.sln                       # Replace with your solution name, i.e. MyWpfApp.sln.
+      Test_Project_Path:  GitWorkflowRun/ApplicationSettings/ApplicationSettings.csproj            
+      Wap_Project_Directory: GitWorkflowRun/ApplicationSettings/
+      Wap_Project_Path: GitWorkflowRun/ApplicationSettings/Artifacts/ 
+
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v1.0.2
+      
+    - name: Create Build Directory
+      run: mkdir _build
+      
+    - name: Restore Packages
+      run: nuget restore $env:Solution_Name
+      
+    - name: Build the application
+      run: |
+            msbuild.exe $env:Solution_Name /p:DeployOnBuild=true /p:OutputPath="../_build" /p:DeleteExistingFiles=True /p:platform="Any CPU" /p:configuration="Release" /p:ApplicationVersion="1.2.3.4" /p:MinimumRequiredVersion="1.2.3.4" /p:PublishVersion="1.2.3.4" 
+    - uses: vimtor/action-zip@v1
+      with:
+           files: _build
+           dest: GitWorkflowRun/result.zip
+    - uses: shallwefootball/s3-upload-action@master
+      name: Upload to S3
+      id: S3 
+      with:
+          aws_key_id: AKIA2FPDD2Y7IJ2GEPLK
+          aws_secret_access_key: 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
+          aws_bucket: shailencodedeploy
+          source_dir: 'GitWorkflowRun/'
+    - name: SetOuput
+      run: |
+          echo ${{ steps.S3.outputs.object_key }} >> $GITHUB_OUTPUT  
+          
+          
+    outputs:
+      # Map the step outputs to job outputs
+      my_var: ${{ format('{0}/{1}.{2}', steps.S3.outputs.object_key, 'result', 'zip') }}
+      #my_var: ${{steps.S3.outputs.object_key}} + "result.zip"
+
+                  
+  continuous-deployment:
+    runs-on: windows-latest
+    needs: [build]
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: AKIA2FPDD2Y7IJ2GEPLK
+          aws-secret-access-key: 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
+          aws-region: us-east-1
+
+      - name: Create CodeDeploy Deployment
+        id: deploy
+        run: |
+          aws deploy create-deployment --application-name CodeDeploy1 --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name dg2 --s3-location bucket=shailencodedeploy,bundleType=zip,key=${{needs.build.outputs.my_var}}
+     
