@@ -1,73 +1,21 @@
-
-name: .NET Desktop
+name: Local runner test
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+  workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: self-hosted
-    container:
-      image: 'buildtools:latest'
-
-
-    env:
-      Solution_Name: ApplicationSettings.sln                       # Replace with your solution name, i.e. MyWpfApp.sln.
-      Test_Project_Path:  GitWorkflowRun/ApplicationSettings/ApplicationSettings.csproj            
-      Wap_Project_Directory: GitWorkflowRun/ApplicationSettings/
-      Wap_Project_Path: GitWorkflowRun/ApplicationSettings/Artifacts/ 
-    
+  testRunner:
+    runs-on: [self-hosted]
+    defaults:
+      run:
+        shell: pwsh
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-      
-    - name: Restore Packages
-      run: nuget restore $env:Solution_Name
-      
-    - name: Build the application
-      run: |
-            msbuild.exe $env:Solution_Name /p:DeployOnBuild=true /p:OutputPath="../_build" /p:DeleteExistingFiles=True /p:platform="Any CPU" /p:configuration="Release" /p:ApplicationVersion="1.2.3.4" /p:MinimumRequiredVersion="1.2.3.4" /p:PublishVersion="1.2.3.4" 
-    - uses: vimtor/action-zip@v1
-      with:
-           files: _build
-           dest: GitWorkflowRun/result.zip
-    - uses: shallwefootball/s3-upload-action@master
-      name: Upload to S3
-      id: S3 
-      with:
-          aws_key_id: AKIA2FPDD2Y7IJ2GEPLK
-          aws_secret_access_key: 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
-          aws_bucket: shailencodedeploy
-          source_dir: 'GitWorkflowRun/'
-    - name: SetOuput
-      run: |
-          echo ${{ steps.S3.outputs.object_key }} >> $GITHUB_OUTPUT  
-          
-          
-    outputs:
-      # Map the step outputs to job outputs
-      my_var: ${{ format('{0}/{1}.{2}', steps.S3.outputs.object_key, 'result', 'zip') }}
-      #my_var: ${{steps.S3.outputs.object_key}} + "result.zip"
-
-                  
-  continuous-deployment:
-    runs-on: windows-latest
-    needs: [build]
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: AKIA2FPDD2Y7IJ2GEPLK
-          aws-secret-access-key: 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
-          aws-region: us-east-1
-
-      - name: Create CodeDeploy Deployment
-        id: deploy
-        run: |
-          aws deploy create-deployment --application-name CodeDeploy1 --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name dg2 --s3-location bucket=shailencodedeploy,bundleType=zip,key=${{needs.build.outputs.my_var}}
-     
+      - uses: actions/checkout@v2
+      - name: Setup Terraform
+        run: choco install terraform -y
+      - name: Refresh Environment
+        run: refreshenv
+      - name: Display Terraform Version
+        run: terraform --version
+      - name: Display Azure-CLI Version
+        run: az --version
