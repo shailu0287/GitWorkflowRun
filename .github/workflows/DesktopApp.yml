@@ -8,21 +8,17 @@ on:
     branches: [ "master" ]
 
 jobs:
-  job-name:
-    runs-on: ubuntu-latest
-    container:
-      image: dockerhub-username:docker-image-tag
   build:
-
     runs-on: windows-latest
+    container:
+      image: 'dockerfile'
+
+
     env:
       Solution_Name: ApplicationSettings.sln                       # Replace with your solution name, i.e. MyWpfApp.sln.
       Test_Project_Path:  GitWorkflowRun/ApplicationSettings/ApplicationSettings.csproj            
       Wap_Project_Directory: GitWorkflowRun/ApplicationSettings/
       Wap_Project_Path: GitWorkflowRun/ApplicationSettings/Artifacts/ 
-   
-    container:
-      image: 'dockerfile'
     
     steps:
     - name: Checkout
