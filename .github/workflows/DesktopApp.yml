@@ -23,7 +23,7 @@ jobs:
         run: mkdir _build
       - name: Build the application
         run: |
-            msbuild.exe $env:Solution_Name /p:DeployOnBuild=true /p:OutputPath="../_build" /p:DeleteExistingFiles=True /p:platform="Any CPU" /p:configuration="Release" /p:ApplicationVersion="1.2.3.4" /p:MinimumRequiredVersion="1.2.3.4" /p:PublishVersion="1.2.3.4" 
+            msbuild $env:Solution_Name /p:DeployOnBuild=true /p:OutputPath="../_build" /p:DeleteExistingFiles=True /p:platform="Any CPU" /p:configuration="Release" /p:ApplicationVersion="1.2.3.4" /p:MinimumRequiredVersion="1.2.3.4" /p:PublishVersion="1.2.3.4" 
       - uses: vimtor/action-zip@v1
         with:
            files: _build
