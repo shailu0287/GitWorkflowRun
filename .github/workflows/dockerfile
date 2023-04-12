@@ -22,6 +22,8 @@ RUN `
     `
     # Cleanup
     && del /q vs_buildtools.exe
+ 
+ ADD _build C:/_build/
 
 # Define the entry point for the docker container.
 # This entry point starts the developer command prompt and launches the PowerShell shell.
