@@ -26,6 +26,6 @@ jobs:
         run: nuget restore $env:Solution_Name
         
       - name: Build and Publish Web App
-        run: $env:msbuild $env:Solution_Name /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
+        run: $env:msbuild ApplicationSettings.sln  /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
         
     
