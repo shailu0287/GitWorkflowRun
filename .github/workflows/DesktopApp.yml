@@ -17,7 +17,7 @@ jobs:
       Test_Project_Path:  GitWorkflowRun/ApplicationSettings/ApplicationSettings.csproj            
       Wap_Project_Directory: GitWorkflowRun/ApplicationSettings/
       Wap_Project_Path: GitWorkflowRun/ApplicationSettings/Artifacts/ 
-      msbuild: C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Current\Bin\Msbuild.exe
+      msbuild: C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Current\Bin\
     steps:
       - uses: actions/checkout@v2
        
@@ -25,7 +25,7 @@ jobs:
       - name: Restore Packages
         run: nuget restore $env:Solution_Name
         
-      - name: Build and Publish Web App
-        run: $env:msbuild ApplicationSettings.sln  /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
-        
-    
+      - name: Build
+        run: |
+          cd "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Current\Bin\"
+          .\MSBuild.exe $Env:Solution_Name
