@@ -24,6 +24,6 @@ jobs:
 
       
       - name: Build and Publish Web App
-        run: msbuild $env:Solution_Name /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
+        run: msbuild.exe $env:Solution_Name /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
         
     
