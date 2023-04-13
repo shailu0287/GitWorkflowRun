@@ -23,7 +23,7 @@ jobs:
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
         with:
-          vswhere-path: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\Tools\'
+          vswhere-path: 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\'
 
       
       - name: Build and Publish Web App
