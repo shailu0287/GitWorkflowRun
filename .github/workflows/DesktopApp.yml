@@ -20,10 +20,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
        
-
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+        with:
+          vswhere-path: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\Tools\'
 
       
       - name: Build and Publish Web App
-        run: C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/MSBuild/Current/Bin/msbuild.exe $env:Solution_Name /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
+        run: msbuild.exe $env:Solution_Name /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
         
     
