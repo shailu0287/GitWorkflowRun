@@ -3,7 +3,7 @@ on: push
 
 jobs:
   node-docker:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     container:
       image: shailu0287/docker-github-runner-win3
     steps:
