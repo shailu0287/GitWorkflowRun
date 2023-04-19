@@ -1,0 +1,85 @@
+##### BASE IMAGE INFO ######
+#Using servercore insider edition for compacted size.
+#For compatibility on "your" host running docker you may need to use a specific tag.
+#E.g. the host OS version must match the container OS version. 
+#If you want to run a container based on a newer Windows build, make sure you have an equivalent host build. 
+#Otherwise, you can use Hyper-V isolation to run older containers on new host builds. 
+#The default entrypoint is for this image is Cmd.exe. To run the image:
+#docker run mcr.microsoft.com/windows/servercore/insider:10.0.{build}.{revision}
+#tag reference: https://mcr.microsoft.com/en-us/product/windows/servercore/insider/tags
+
+#Win10
+#FROM mcr.microsoft.com/windows/servercore/insider:10.0.19035.1
+FROM mcr.microsoft.com/dotnet/framework/sdk:3.5-windowsservercore-ltsc2019
+#Win11
+#FROM mcr.microsoft.com/windows/servercore/insider:10.0.20348.1
+
+#input GitHub runner version argument
+ARG RUNNER_VERSION
+
+SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop';"]
+
+#Set working directory
+WORKDIR /actions-runner
+
+#Install chocolatey
+ADD scripts/Install-Choco.ps1 .
+RUN .\Install-Choco.ps1 -Wait; \
+    Remove-Item .\Install-Choco.ps1 -Force
+
+
+#Install Git, GitHub-CLI, Azure-CLI and PowerShell Core with Chocolatey (add more tooling if needed at build)
+RUN choco install -y \
+    git \
+    gh \
+    powershell-core \ 
+    awscli \
+    visualstudio2022-workload-manageddesktopbuildtools 
+
+
+#Download GitHub Runner based on RUNNER_VERSION argument (Can use: Docker build --build-arg RUNNER_VERSION=x.y.z)
+RUN Invoke-WebRequest -Uri "https://github.com/actions/runner/releases/download/v$env:RUNNER_VERSION/actions-runner-win-x64-$env:RUNNER_VERSION.zip" -OutFile "actions-runner.zip"; \
+      Expand-Archive -Path ".\\actions-runner.zip" -DestinationPath '.'; \
+      Remove-Item ".\\actions-runner.zip" -Force
+
+#Download nuget.exe
+RUN Invoke-WebRequest "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe" -OutFile "C:\\windows\\nuget.exe" -UseBasicParsing
+
+#Set environment variable path of nuget
+RUN setx PATH '%PATH%;C:\\windows\\nuget.exe'
+
+
+#Download Genome set up
+RUN Invoke-WebRequest -Uri "https://genomesetup.blob.core.windows.net/gitwf/Genome_VS2019_NET4.8_New.zip" -OutFile "Genome_VS2019_NET4.8_New.zip"; \
+     Expand-Archive -Path ".\\Genome_VS2019_NET4.8_New.zip" -DestinationPath '.'; \
+     Remove-Item ".\\Genome_VS2019_NET4.8_New.zip" -Force
+
+WORKDIR "C:\\Program Files (x86)\\TechTalk\\Genome 4.2 Professional Edition for .NET 3.5\\Bin"
+
+#Copy genome.lic file
+RUN Copy-Item "C:\\actions-runner\\Genome_VS2019_NET4.8\\genome.lic" -Destination "./"
+
+#Install Genome
+RUN Start-Process msiexec.exe -Wait -ArgumentList '/i "C:\\actions-runner\\Genome_VS2019_NET4.8\\Genome-4.2.11-Professional-setup.msi" /quiet /le "C:\\actions-runner\\Genome_VS2019_NET4.8\\DacFramework.log"'
+
+WORKDIR "C:\\Program Files (x86)\\MSBuild\\TechTalk\\Genome\\1.0"
+
+#Copy ddsc and target files in genome folder
+RUN Copy-Item "C:\\actions-runner\\Genome_VS2019_NET4.8\\Genome_VS2019_NET4.8\\ddsc\\*" -Destination "./"
+RUN Copy-Item "C:\\actions-runner\\Genome_VS2019_NET4.8\\Genome_VS2019_NET4.8\\targets\\*" -Destination "./"
+
+WORKDIR "C:\\actions-runner"
+
+#Download Devexpres setup
+RUN Invoke-WebRequest -Uri "https://genomesetup.blob.core.windows.net/gitwf/DevExpressComponentsBundleSetup-19.2.7.zip" -OutFile "DevExpressComponentsBundleSetup-19.2.7.zip"; \
+     Expand-Archive -Path ".\\DevExpressComponentsBundleSetup-19.2.7.zip" -DestinationPath '.'; \
+     Remove-Item ".\\DevExpressComponentsBundleSetup-19.2.7.zip" -Force -verbose
+
+#Install Devexpress
+RUN  Start-Process -FilePath "C:\\actions-runner\\DevExpressComponentsBundleSetup-19.2.7.exe" -Argument '"/Q /EMAIL:shailendra.sharma@coxautoinc.com /PASSWORD:@Shailen05 /DEBUG /EULA:accept"' -Wait -NoNewWindow -PassThru
+
+#Add GitHub runner configuration startup script
+ADD scripts/start.ps1 .
+ADD scripts/Cleanup-Runners.ps1 .
+ENTRYPOINT ["pwsh.exe", ".\\start.ps1"]
+#ENTRYPOINT ["pwsh.exe"]
